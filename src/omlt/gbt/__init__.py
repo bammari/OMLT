@@ -22,5 +22,5 @@ We use the following notation to describe the gradient-boosted trees formulation
     F_{t,l} &:= \text{Weight of leaf $l$ in tree $t$}\\
     \end{align*}
 """
-from omlt.gbt.gbt_formulation import GBTBigMFormulation, GBDTSimpleFormulation
+from omlt.gbt.gbt_formulation import GBTBigMFormulation, GBTSimpleFormulation
 from omlt.gbt.model import GradientBoostedTreeModel
