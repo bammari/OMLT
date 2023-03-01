@@ -497,7 +497,8 @@ def add_simple_formulation_to_block(block, model_definition, input_vars, output_
                 splits[split]['right_leaves'] = [right_child]
                 # print("right_child" + str(right_child))
 
-    features = np.arange(0, len(set(nodes_feature_ids)))
+    features = np.arange(0, model_definition.n_inputs)
+
     for i in tree_ids:
         splits = splits_dic[i]
         leaves = leaves_dic[i]
@@ -508,10 +509,12 @@ def add_simple_formulation_to_block(block, model_definition, input_vars, output_
                 leaves[leaf]['bounds'][th] = [None, None]
         import pprint
         pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(splits)
+        #pp.pprint(splits)
+        #pp.pprint(leaves)
         for split in splits:
             var = splits[split]['col']
             for leaf in splits[split]['left_leaves']:
+                #print(leaf)
                 leaves[leaf]['bounds'][var][1] = splits[split]['th']
 
             for leaf in splits[split]['right_leaves']:
