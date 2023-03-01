@@ -506,10 +506,9 @@ def add_simple_formulation_to_block(block, model_definition, input_vars, output_
         for th in features:
             for leaf in leaves:
                 leaves[leaf]['bounds'][th] = [None, None]
-
-    for i in tree_ids:
-        splits = splits_dic[i]
-        leaves = leaves_dic[i]
+        import pprint
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(splits)
         for split in splits:
             var = splits[split]['col']
             for leaf in splits[split]['left_leaves']:
