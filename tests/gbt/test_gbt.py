@@ -73,16 +73,16 @@ onnx_model = convert(model_lgb,
                         initial_types=initial_types, 
                         target_opset=8)
 
-def write_onnx_to_file(onnx_model, path, file_name="output.onnx"):
-    from pathlib import Path
-    with open(Path(path) / file_name, "wb") as onnx_file:
-        onnx_file.write(onnx_model.SerializeToString())
-        return(f'Onnx model written to {onnx_file.name}')
+# def write_onnx_to_file(onnx_model, path, file_name="output.onnx"):
+#     from pathlib import Path
+#     with open(Path(path) / file_name, "wb") as onnx_file:
+#         onnx_file.write(onnx_model.SerializeToString())
+#         return(f'Onnx model written to {onnx_file.name}')
 
-write_onnx_to_file(onnx_model, r'C:\Users\yufengq\Desktop\RA\OMLT_ML')
+# write_onnx_to_file(onnx_model, r'..\OMLT')
 
-def test():
-    model = onnx.load(".\output.onnx")
+def test_gbt_formulation():
+    model = onnx_model
 
     m = pe.ConcreteModel()
 
@@ -115,66 +115,3 @@ def test():
     solution_1_bigm = (pe.value(m.x), pe.value(m.y))
     y_pred = model_lgb.predict(np.array(solution_1_bigm[0]).reshape(1, -1))
     assert(y_pred[0] - solution_1_bigm[1] <= 1e-4)
-
-
-
-
-
-quit()
-# TODO: did we remove categorical variables intentionally?
-# def test_formulation_with_categorical_variables():
-#     model = onnx.load(Path(__file__).parent / "categorical_model.onnx")
-
-#     m = pe.ConcreteModel()
-
-#     m.x = pe.Var(range(3), bounds=(-2.0, 2.0))
-#     # categorical variable
-#     m.y = pe.Var(bounds=(0, 1), domain=pe.Integers)
-
-#     m.z = pe.Var()
-
-#     m.gbt = pe.Block()
-#     add_formulation_to_block(
-#         m.gbt, model, input_vars=[m.x[0], m.x[1], m.x[2], m.y], output_vars=[m.z]
-#     )
-
-#     assert len(list(m.gbt.component_data_objects(pe.Var))) == 193
-#     # there are 28 * 2 constraints missing
-#     # related to categorical variables
-#     assert len(list(m.gbt.component_data_objects(pe.Constraint))) == 391
-
-#     assert len(m.gbt.z_l) == 160
-#     assert len(m.gbt.y) == 31
-
-#     assert len(m.gbt.single_leaf) == 20
-#     assert len(m.gbt.left_split) == 140
-#     assert len(m.gbt.right_split) == 140
-#     assert len(m.gbt.categorical) == 1
-#     assert len(m.gbt.var_lower) == 31
-#     assert len(m.gbt.var_upper) == 31
-
-
-@pytest.mark.skipif(not onnx_available, reason="Need ONNX for this test")
-def test_big_m_formulation_block():
-    onnx_model = onnx.load(Path(__file__).parent / "continuous_model.onnx")
-    model = GradientBoostedTreeModel(onnx_model)
-
-    m = pe.ConcreteModel()
-    m.mod = OmltBlock()
-    formulation = GBTBigMFormulation(model)
-    m.mod.build_formulation(formulation)
-
-    m.obj = pe.Objective(expr=0)
-
-
-@pytest.mark.skipif(not onnx_available, reason="Need ONNX for this test")
-def test_big_m_formulation_block_with_dimension_subset():
-    onnx_model = onnx.load(Path(__file__).parent / "dimension_subset.onnx")
-    model = GradientBoostedTreeModel(onnx_model)
-
-    m = pe.ConcreteModel()
-    m.mod = OmltBlock()
-    formulation = GBTBigMFormulation(model)
-    # if it can build the formulation it means it is handling the lack
-    # of all dimension
-    m.mod.build_formulation(formulation)
