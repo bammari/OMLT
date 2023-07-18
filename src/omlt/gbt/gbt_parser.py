@@ -256,7 +256,8 @@ def _get_model_data(model_definition):
                 splits[split]['right_leaves'] = [right_child]
                 # print("right_child" + str(right_child))
 
-    features = np.arange(0, model_definition.n_inputs)
+    n_inputs = _model_num_inputs(model_definition)
+    features = np.arange(0, n_inputs)
 
     for i in tree_ids:
         splits = splits_dic[i]
