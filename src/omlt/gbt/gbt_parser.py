@@ -279,8 +279,8 @@ def _get_model_data(model_definition):
 
             for leaf in splits[split]['right_leaves']:
                 leaves[leaf]['bounds'][var][0] = splits[split]['th']
-    for t in tree_ids:
-        leaves_dic[t] = reassign_none_bounds(
-            leaves_dic[t], model_definition.scaled_input_bounds, features)
+    # for t in tree_ids:
+    #     leaves_dic[t] = reassign_none_bounds(
+    #         leaves_dic[t], model_definition.scaled_input_bounds, features)
     
     return leaves_dic, splits_dic
