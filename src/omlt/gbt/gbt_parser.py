@@ -1,5 +1,5 @@
 import numpy as np
-from omlt.gbt.model import GradientBoostedTreeModel
+# from omlt.gbt.model import GradientBoostedTreeModel
 from collections import defaultdict
 from collections import deque
 
@@ -150,10 +150,10 @@ def reassign_none_bounds(leaves, input_bounds, features):
 
 
 def _get_model_data(model_definition):
-    if isinstance(model_definition, GradientBoostedTreeModel):
-        gbt = model_definition.onnx_model
-    else:
-        gbt = model_definition
+    # if isinstance(model_definition, GradientBoostedTreeModel):
+    #     gbt = model_definition.onnx_model
+    # else:
+    gbt = model_definition
     graph = gbt.graph
 
     root_node = graph.node[0]
