@@ -264,6 +264,7 @@ def _get_model_data(model_definition):
         leaves = leaves_dic[i]
         for leaf in leaves:
             leaves[leaf]['bounds'] = {}
+            leaves[leaf]['slope'] = [0] * n_inputs
         for th in features:
             for leaf in leaves:
                 leaves[leaf]['bounds'][th] = [None, None]
