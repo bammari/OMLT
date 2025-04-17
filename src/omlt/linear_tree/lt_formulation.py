@@ -305,15 +305,9 @@ def _add_gdp_formulation_to_block(  # noqa: PLR0913
     features = np.arange(0, n_inputs)
 
     # Use the input_bounds and the linear models in the leaves to calculate
-    # the lower and upper bounds on the output variable. Required for Pyomo.GDP
-    scaled_output_bounds = _build_output_bounds(model_definition, scaled_input_bounds)
-    unscaled_output_bounds = _build_output_bounds(
-        model_definition, unscaled_input_bounds
-    )
-
+    # the lower and upper bounds on the output variable. Required for Pyomo.GDP.
     # Ouptuts are automatically scaled based on whether inputs are scaled
-    block.outputs.setub(unscaled_output_bounds[1])
-    block.outputs.setlb(unscaled_output_bounds[0])
+    scaled_output_bounds = _build_output_bounds(model_definition, scaled_input_bounds)
     block.scaled_outputs.setub(scaled_output_bounds[1])
     block.scaled_outputs.setlb(scaled_output_bounds[0])
 
@@ -322,6 +316,11 @@ def _add_gdp_formulation_to_block(  # noqa: PLR0913
             tree_ids, bounds=(scaled_output_bounds[0], scaled_output_bounds[1])
         )
     else:
+        unscaled_output_bounds = _build_output_bounds(
+            model_definition, unscaled_input_bounds
+        )
+        block.outputs.setub(unscaled_output_bounds[1])
+        block.outputs.setlb(unscaled_output_bounds[0])
         block.intermediate_output = pe.Var(
             tree_ids, bounds=(unscaled_output_bounds[0], unscaled_output_bounds[1])
         )
